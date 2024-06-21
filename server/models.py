@@ -48,8 +48,13 @@ class Client(db.Model, SerializerMixin):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'invoices': [{'id': invoice.id, 'total': invoice.total} for invoice in self.invoices]
+            'paid_in_total': self.paid_in_total,
+            'invoices': [{'id': invoice.id, 'total': round(invoice.total,2), 'paid_in_full': invoice.paid_in_full} for invoice in self.invoices]
         }
+
+    @hybrid_property
+    def paid_in_total(self):
+        return all(invoice.paid_in_full for invoice in self.invoices)
 
     invoices = db.relationship('Invoice', back_populates='client', lazy=True)
     users = db.relationship('UserClients', back_populates='client')
@@ -81,7 +86,7 @@ class Invoice(db.Model, SerializerMixin):
         return {
             'id': self.id,
             'client': {'id': self.client.id, 'name': self.client.name},
-            'total': self.total,
+            'total': round(self.total,2),
             'paid_in_full': self.paid_in_full,
             'services': [service.to_dict() for service in self.services]
         }
@@ -109,7 +114,7 @@ class InvoiceService(db.Model, SerializerMixin):
     def to_dict(self):
         return {
             'id': self.id,
-            'price': self.price,
+            'price': round(self.price, 2),
             'paid_status': self.paid_status
         }
 
