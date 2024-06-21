@@ -43,6 +43,14 @@ class Client(db.Model, SerializerMixin):
     name = db.Column(db.String)
     email = db.Column(db.String)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'invoices': [{'id': invoice.id, 'total': invoice.total} for invoice in self.invoices]
+        }
+
     invoices = db.relationship('Invoice', back_populates='client', lazy=True)
     users = db.relationship('UserClients', back_populates='client')
     
@@ -52,6 +60,14 @@ class Service(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'invoices': [invoice.to_dict() for invoice in self.invoices]
+        }
+
+
     invoices = db.relationship('InvoiceService', back_populates='service')
 
 class Invoice(db.Model, SerializerMixin):
@@ -60,12 +76,26 @@ class Invoice(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'client': {'id': self.client.id, 'name': self.client.name},
+            'total': self.total,
+            'paid_in_full': self.paid_in_full,
+            'services': [service.to_dict() for service in self.services]
+        }
+
     client = db.relationship('Client', back_populates='invoices', lazy=True)
     services = db.relationship('InvoiceService', back_populates='invoice')
 
     @property
     def total(self):
         return sum(service.price for service in self.services)
+    
+    @hybrid_property
+    def paid_in_full(self):
+        return all(service.paid_status for service in self.services)
 
 class InvoiceService(db.Model, SerializerMixin):
     __tablename__ = 'invoice_services'
@@ -74,6 +104,14 @@ class InvoiceService(db.Model, SerializerMixin):
     invoice_id = db.Column(db.Integer, db.ForeignKey('invoices.id'))
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
     price = db.Column(db.Float)
+    paid_status = db.Column(db.Boolean)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'price': self.price,
+            'paid_status': self.paid_status
+        }
 
     invoice = db.relationship('Invoice', back_populates='services')
     service = db.relationship('Service', back_populates='invoices')

@@ -59,7 +59,8 @@ def create_invoice_services(invoices, services):
             invoice_service = InvoiceService(
                 invoice=invoice,
                 service=rc(services),
-                price=round(fake.pyfloat(left_digits=2, right_digits=2, positive=True), 2)
+                price=round(fake.pyfloat(left_digits=2, right_digits=2, positive=True), 2),
+                paid_status=rc([True, False])
             )
             invoice_services.append(invoice_service)
     return invoice_services
