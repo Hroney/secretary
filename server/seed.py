@@ -19,7 +19,9 @@ def create_users():
         user = User(
             username=fake.user_name()
         )
-        user.password_hash = fake.password()
+        password = fake.password()
+        user.password_hash = password
+        print('user', user.username, 'password', password)
         users.append(user)
     return users
 

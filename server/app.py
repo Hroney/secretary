@@ -3,7 +3,7 @@
 # Standard library imports
 
 # Remote library imports
-from flask import request, make_response
+from flask import request, make_response, jsonify
 from flask_restful import Resource
 
 # Local imports
@@ -62,9 +62,17 @@ class InvoiceServices(Resource):
         invoices_dict = [invoice.to_dict() for invoice in invoices]
         return invoices_dict, 200
 
-
-
-
+class Login(Resource):
+    def post(self):
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        user = User.query.filter_by(username=username).first()
+        print(user.authenticate(password))
+        if user and user.authenticate(password):
+            return {'message': 'login successful', 'userId': user.id}, 200
+        else:
+            return {'message': 'Invalid credentials'}, 401
 
 
 
@@ -78,6 +86,7 @@ api.add_resource(Clients, '/clients')
 api.add_resource(Services, '/services')
 api.add_resource(Invoices, '/invoices')
 api.add_resource(InvoiceServices, '/invoice_services')
+api.add_resource(Login, '/login')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

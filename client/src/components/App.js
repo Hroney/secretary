@@ -1,8 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { Switch, Route } from "react-router-dom";
+import NavBar from "./NavBar"
+import { Outlet, useLocation, useNavigate, useRoutes } from "react-router-dom";
 
 function App() {
-  return <h1>Project Client</h1>;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem('user'));
+  //   console.log(user)
+  //   if (user) {
+  //     setIsLoggedIn(true)
+  //   } else {
+  //     navigate('/login')
+  //   }
+  // }, [navigate])
+
+  return (
+    <div>
+      <header><NavBar isLoggedIn={isLoggedIn} /></header>
+      <main className="content">
+        <Outlet context={[isLoggedIn, setIsLoggedIn]} />
+      </main>
+    </div>
+  );
 }
 
 export default App;
