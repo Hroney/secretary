@@ -115,7 +115,8 @@ class InvoiceService(db.Model, SerializerMixin):
         return {
             'id': self.id,
             'price': round(self.price, 2),
-            'paid_status': self.paid_status
+            'paid_status': self.paid_status,
+            'name': self.service.name
         }
 
     invoice = db.relationship('Invoice', back_populates='services')
@@ -127,6 +128,14 @@ class UserClients(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'client_id': self.client_id
+        }
+
 
     user = db.relationship('User', back_populates='clients')
     client = db.relationship('Client', back_populates='users')

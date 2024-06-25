@@ -2,7 +2,7 @@ import App from './components/App';
 import Login from './components/Login'
 import Home from './components/Home'
 import Schedule from './components/Schedule'
-import Invoice from './components/Invoice'
+import Invoices from './components/Invoices'
 import { Navigate } from 'react-router-dom';
 import Logout from './components/Logout';
 
@@ -30,7 +30,7 @@ const routes = [
             },
             {
                 path: 'invoice',
-                element: <Invoice />,
+                element: <Invoices />,
             },
             {
                 path: 'logout',

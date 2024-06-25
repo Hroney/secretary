@@ -68,15 +68,27 @@ class Login(Resource):
         username = data.get('username')
         password = data.get('password')
         user = User.query.filter_by(username=username).first()
-        print(user.authenticate(password))
         if user and user.authenticate(password):
             return {'message': 'login successful', 'userId': user.id}, 200
         else:
             return {'message': 'Invalid credentials'}, 401
 
+class ClientsByUserID(Resource):
+    def get(self, user_id):
+        clients = UserClients.query.filter_by(user_id=user_id).all()
+        clients_dict = [client.to_dict() for client in clients]
+        return clients_dict, 200
 
+class ClientByID(Resource):
+    def get(self, id):
+        client = Client.query.filter_by(id=id).first()
+        return client.to_dict(), 200
 
-
+class InvoicesByClientID(Resource):
+    def get(self, client_id):
+        invoices = Invoice.query.filter_by(client_id=client_id).all()
+        invoice_dict = [invoice.to_dict() for invoice in invoices]
+        return invoice_dict, 200
 
 
 
@@ -86,6 +98,9 @@ api.add_resource(Clients, '/clients')
 api.add_resource(Services, '/services')
 api.add_resource(Invoices, '/invoices')
 api.add_resource(InvoiceServices, '/invoice_services')
+api.add_resource(ClientsByUserID, '/clients_by_user_id/<int:user_id>')
+api.add_resource(ClientByID, '/client_by_id/<int:id>')
+api.add_resource(InvoicesByClientID, '/invoices_by_client_id/<int:client_id>')
 api.add_resource(Login, '/login')
 
 if __name__ == '__main__':

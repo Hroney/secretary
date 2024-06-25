@@ -5,10 +5,14 @@ import redirectCheck from "../helpers/redirectCheck";
 function Schedule() {
     const [isLoggedIn, setIsLoggedIn] = useOutletContext();
 
+
+
     return (
         <div>
             {!isLoggedIn ? redirectCheck(isLoggedIn) :
-                "Schedule"
+                <div>
+
+                </div>
             }
         </div>
     )
