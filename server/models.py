@@ -1,7 +1,7 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.associationproxy import association_proxy
-
+from datetime import datetime
 from config import db, bcrypt
 
 # Models go here!
@@ -110,13 +110,15 @@ class InvoiceService(db.Model, SerializerMixin):
     service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
     price = db.Column(db.Float)
     paid_status = db.Column(db.Boolean)
+    scheduled_date = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):
         return {
             'id': self.id,
             'price': round(self.price, 2),
             'paid_status': self.paid_status,
-            'name': self.service.name
+            'name': self.service.name,
+            'scheduled_date': self.scheduled_date.isoformat() if self.scheduled_date else None
         }
 
     invoice = db.relationship('Invoice', back_populates='services')

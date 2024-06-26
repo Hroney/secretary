@@ -31,6 +31,9 @@ function InvoiceCard({ invoice, index }) {
                                 <div>
                                     paid: {service.paid_status ? "yes" : "no"}
                                 </div>
+                                <div>
+                                    date: {service.scheduled_date}
+                                </div>
                             </div>
                         ))}
                     </div>

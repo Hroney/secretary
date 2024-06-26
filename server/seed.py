@@ -3,6 +3,7 @@
 # Standard library imports
 from random import randint, choice as rc
 from sqlalchemy.exc import IntegrityError
+from datetime import datetime, timedelta
 
 # Remote library imports
 from faker import Faker
@@ -58,11 +59,13 @@ def create_invoice_services(invoices, services):
     for invoice in invoices:
         num_services = randint(2, 5)
         for _ in range(num_services):
+            scheduled_date = fake.date_time_between(start_date='-30d', end_date='+30d')
             invoice_service = InvoiceService(
                 invoice=invoice,
                 service=rc(services),
                 price=round(fake.pyfloat(left_digits=2, right_digits=2, positive=True), 2),
-                paid_status=rc([True, False])
+                paid_status=rc([True, False]),
+                scheduled_date=scheduled_date
             )
             invoice_services.append(invoice_service)
     return invoice_services
@@ -81,8 +84,6 @@ def create_user_clients(users, clients):
             )
             user_clients.append(user_client)
     return user_clients
-
-
 
 if __name__ == '__main__':
     fake = Faker()
@@ -136,7 +137,5 @@ if __name__ == '__main__':
         except IntegrityError as e:
             db.session.rollback()
             print(f"Error seeding UserClients: {e}")
-
-
 
         print("Done Seeding!")

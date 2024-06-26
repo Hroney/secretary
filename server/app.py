@@ -8,6 +8,7 @@ from flask_restful import Resource
 
 # Local imports
 from config import app, db, api
+from datetime import datetime
 # Add your model imports
 from models import db, User, Invoice, Client, InvoiceService, Service, UserClients
 
@@ -90,6 +91,26 @@ class InvoicesByClientID(Resource):
         invoice_dict = [invoice.to_dict() for invoice in invoices]
         return invoice_dict, 200
 
+class Schedule(Resource):
+    def get(self, id):
+        user = User.query.filter_by(id=id).first()
+        if user:
+            clients = UserClients.query.filter_by(user_id=user.id).all()
+            schedule = []
+            for client in clients:
+                invoices = Invoice.query.filter_by(client_id=client.id).all()
+                for invoice in invoices:
+                    invoice_dict = invoice.to_dict()
+                    services_list = invoice_dict['services']
+                    for service in services_list:
+                        schedule.append({
+                            'client': invoice_dict['client'],
+                            'service': service['name'],
+                            'scheduled_date': service['scheduled_date'] if service['scheduled_date'] else None
+                        })
+            return schedule, 200
+        else:
+            return jsonify({'error': 'User not found'}), 404
 
 
 api.add_resource(Index, '/')
@@ -102,6 +123,7 @@ api.add_resource(ClientsByUserID, '/clients_by_user_id/<int:user_id>')
 api.add_resource(ClientByID, '/client_by_id/<int:id>')
 api.add_resource(InvoicesByClientID, '/invoices_by_client_id/<int:client_id>')
 api.add_resource(Login, '/login')
+api.add_resource(Schedule, '/schedule/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
