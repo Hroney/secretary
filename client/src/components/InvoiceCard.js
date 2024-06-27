@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import InvoiceServiceCard from "./InvoiceServiceCard"
 
 function InvoiceCard({ invoice, index }) {
     const [expand, setExpand] = useState(false)
@@ -16,25 +17,15 @@ function InvoiceCard({ invoice, index }) {
                 <div>
                     Paid in full: {invoice.paid_in_full ? "yes" : "no"}
                 </div>
-                <button onClick={() => setExpand(!expand)}> expand </button>
+                <button onClick={() => setExpand(!expand)}> See Details </button>
                 {!expand ? null :
                     <div>
                         <big>Services</big>
-                        {invoice.services.map((service) => (
-                            <div key={service.id}>
-                                <div>
-                                    name: {service.name}
-                                </div>
-                                <div>
-                                    price: {service.price}
-                                </div>
-                                <div>
-                                    paid: {service.paid_status ? "yes" : "no"}
-                                </div>
-                                <div>
-                                    date: {service.scheduled_date}
-                                </div>
-                            </div>
+                        {invoice.services.map((service, index) => (
+                            <InvoiceServiceCard
+                                key={index}
+                                service={service}
+                            />
                         ))}
                     </div>
                 }

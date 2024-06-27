@@ -106,8 +106,10 @@ class Schedule(Resource):
                         schedule.append({
                             'client': invoice_dict['client'],
                             'service': service['name'],
-                            'scheduled_date': service['scheduled_date'] if service['scheduled_date'] else None
+                            'scheduled_date': service['scheduled_date'] if service['scheduled_date'] else None,
+                            'client_service_list' : services_list
                         })
+                
             return schedule, 200
         else:
             return jsonify({'error': 'User not found'}), 404

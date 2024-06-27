@@ -4,6 +4,7 @@ import redirectCheck from '../helpers/redirectCheck';
 import Calendar from 'react-calendar';
 import { startOfDay, differenceInCalendarDays, addMonths, subYears } from 'date-fns';
 import 'react-calendar/dist/Calendar.css';
+import ScheduleServiceCard from './ScheduleServiceCard';
 
 const isSameDay = (a, b) => {
     return differenceInCalendarDays(startOfDay(a), startOfDay(b)) === 0;
@@ -13,6 +14,7 @@ function Schedule() {
     const [isLoggedIn, setIsLoggedIn] = useOutletContext();
     const [schedule, setSchedule] = useState([]);
     const [value, setValue] = useState(new Date());
+    const [onChangeServices, setOnChangeServices] = useState([])
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -49,6 +51,10 @@ function Schedule() {
 
     const onChange = (nextValue) => {
         setValue(nextValue);
+        const scheduledItems = schedule.filter(item =>
+            isSameDay(new Date(item.scheduled_date), nextValue)
+        );
+        setOnChangeServices(scheduledItems)
     };
 
     const minDate = subYears(new Date(), 1);
@@ -65,6 +71,12 @@ function Schedule() {
                         minDate={minDate}
                         maxDate={maxDate}
                     />
+                    {onChangeServices.map((service, index) => (
+                        <ScheduleServiceCard
+                            service={service}
+                            key={index}
+                        />
+                    ))}
                 </div>
             }
         </div>

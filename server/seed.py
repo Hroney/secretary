@@ -28,7 +28,7 @@ def create_users():
 
 def create_clients():
     clients = []
-    for _ in range(10):
+    for _ in range(20):
         client = Client(
             name=fake.name(),
             email=fake.email()
@@ -45,35 +45,36 @@ def create_services():
         services.append(service)
     return services
 
-def create_invoices(clients):
+def create_invoices_and_services(clients, services):
     invoices = []
-    for _ in range(20):
-        invoice = Invoice(
-            client=rc(clients)
-        )
-        invoices.append(invoice)
-    return invoices
-
-def create_invoice_services(invoices, services):
     invoice_services = []
-    for invoice in invoices:
-        num_services = randint(2, 5)
-        for _ in range(num_services):
-            scheduled_date = fake.date_time_between(start_date='-30d', end_date='+30d')
-            invoice_service = InvoiceService(
-                invoice=invoice,
-                service=rc(services),
-                price=round(fake.pyfloat(left_digits=2, right_digits=2, positive=True), 2),
-                paid_status=rc([True, False]),
-                scheduled_date=scheduled_date
+    
+    for client in clients:
+        num_invoices = randint(1, 5)
+        for _ in range(num_invoices):
+            invoice = Invoice(
+                client=client
             )
-            invoice_services.append(invoice_service)
-    return invoice_services
+            invoices.append(invoice)
+            
+            scheduled_date = fake.date_time_between(start_date='-30d', end_date='+30d')
+            num_services = randint(2, 5)
+            for _ in range(num_services):
+                invoice_service = InvoiceService(
+                    invoice=invoice,
+                    service=rc(services),
+                    price=round(fake.pyfloat(left_digits=2, right_digits=2, positive=True), 2),
+                    paid_status=rc([True, False]),
+                    scheduled_date=scheduled_date
+                )
+                invoice_services.append(invoice_service)
+    
+    return invoices, invoice_services
 
 def create_user_clients(users, clients):
     user_clients = []
     for user in users:
-        num_clients = randint(2, 8)
+        num_clients = randint(5, 10)
         client_set = set()
         for _ in range(num_clients):
             client_set.add(rc(clients))
@@ -115,19 +116,15 @@ if __name__ == '__main__':
         db.session.add_all(services)
         db.session.commit()
 
-        print("Seeding Invoices...")
-        invoices = create_invoices(clients)
+        print("Seeding Invoices and InvoiceServices...")
+        invoices, invoice_services = create_invoices_and_services(clients, services)
         db.session.add_all(invoices)
-        db.session.commit()
-
-        print("Seeding InvoiceServices...")
-        invoice_services = create_invoice_services(invoices, services)
         db.session.add_all(invoice_services)
         try:
             db.session.commit()
         except IntegrityError as e:
             db.session.rollback()
-            print(f"Error seeding InvoiceServices: {e}")
+            print(f"Error seeding Invoices and InvoiceServices: {e}")
 
         print("Seeding UserClients...")
         user_clients = create_user_clients(users, clients)

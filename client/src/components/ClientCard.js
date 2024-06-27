@@ -55,19 +55,16 @@ function ClientCard({ client }) {
         <div >
             <p>
                 {clientObj.name}
+                <button onClick={() => setExtended(!extended)}>See Details</button>
+                {!extended ? null :
+                    <div>
+                        {invoiceList.length === 0 ? "No Invoices" : "Invoices"}
+                        {invoiceList.map((invoice, index) => (
+                            <InvoiceCard key={invoice.id} invoice={invoice} index={index} />
+                        ))}
+                    </div>
+                }
             </p>
-            <p>
-                Email: {clientObj.email}
-            </p>
-            <button onClick={() => setExtended(!extended)}>expand</button>
-            {!extended ? null :
-                <div>
-                    <big>{invoiceList.length === 0 ? "No Invoices" : "Invoices"}</big>
-                    {invoiceList.map((invoice, index) => (
-                        <InvoiceCard key={invoice.id} invoice={invoice} index={index} />
-                    ))}
-                </div>
-            }
         </div>
     );
 }
