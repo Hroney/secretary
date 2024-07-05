@@ -96,3 +96,10 @@
     border: 1px solid #a0a096;
     border-top: none;
 }
+
+.schedule_create_invoice_box {
+    align-self: flex-end;
+    flex-basis: 100%;
+    border: 1px solid #a0a096;
+    border-top: none;
+}

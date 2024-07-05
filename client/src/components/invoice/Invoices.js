@@ -1,5 +1,5 @@
 import { useOutletContext } from "react-router-dom";
-import redirectCheck from "../helpers/redirectCheck";
+import redirectCheck from "../../helpers/redirectCheck";
 import { useEffect, useState } from "react";
 import ClientCard from './ClientCard';
 

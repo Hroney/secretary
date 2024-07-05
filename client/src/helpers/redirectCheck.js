@@ -1,4 +1,4 @@
-import ErrorPage from '../components/ErrorPage'
+import ErrorPage from '../components/main/ErrorPage'
 
 const redirectCheck = (isLoggedIn) => {
     const error = isLoggedIn ? "Already logged in." : "Not logged in."

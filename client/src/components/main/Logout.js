@@ -1,5 +1,5 @@
 import { useNavigate, useOutletContext } from "react-router-dom"
-import redirectCheck from '../helpers/redirectCheck'
+import redirectCheck from '../../helpers/redirectCheck'
 
 const handleLogOut = (isLoggedIn, setIsLoggedIn, navigate) => {
     setIsLoggedIn(!isLoggedIn)

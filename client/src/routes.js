@@ -1,10 +1,10 @@
-import App from './components/App';
-import Login from './components/Login'
+import App from './components/main/App';
+import Login from './components/main/Login'
 import Home from './components/Home'
-import Schedule from './components/Schedule'
-import Invoices from './components/Invoices'
+import Schedule from './components/schedule/Schedule'
+import Invoices from './components/invoice/Invoices'
 import { Navigate } from 'react-router-dom';
-import Logout from './components/Logout';
+import Logout from './components/main/Logout';
 
 const routes = [
 
