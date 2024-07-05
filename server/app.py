@@ -62,6 +62,23 @@ class InvoiceServices(Resource):
         invoices = InvoiceService.query.all()
         invoices_dict = [invoice.to_dict() for invoice in invoices]
         return invoices_dict, 200
+    
+class InvoiceServicesById(Resource):
+    def get(self, id):
+        invoice = InvoiceService.query.filter_by(id=id).first()
+        return invoice.to_dict(), 200
+    
+    def patch(self, id):
+        try:
+            record = InvoiceService.query.filter_by(id=id).first()
+            for attr in request.json:
+                setattr(record, attr, request.json[attr])
+            db.session.add(record)
+            db.session.commit()
+            return record.to_dict(), 200
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error {e} occured'}, 500
 
 class Login(Resource):
     def post(self):
@@ -91,6 +108,8 @@ class InvoicesByClientID(Resource):
         invoice_dict = [invoice.to_dict() for invoice in invoices]
         return invoice_dict, 200
 
+        
+
 class Schedule(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
@@ -107,7 +126,8 @@ class Schedule(Resource):
                             'client': invoice_dict['client'],
                             'service': service['name'],
                             'scheduled_date': service['scheduled_date'] if service['scheduled_date'] else None,
-                            'client_service_list' : services_list
+                            'client_service_list' : services_list,
+                            'invoice_service_id': service['id']
                         })
                 
             return schedule, 200
@@ -121,6 +141,7 @@ api.add_resource(Clients, '/clients')
 api.add_resource(Services, '/services')
 api.add_resource(Invoices, '/invoices')
 api.add_resource(InvoiceServices, '/invoice_services')
+api.add_resource(InvoiceServicesById, '/invoice_service/<int:id>')
 api.add_resource(ClientsByUserID, '/clients_by_user_id/<int:user_id>')
 api.add_resource(ClientByID, '/client_by_id/<int:id>')
 api.add_resource(InvoicesByClientID, '/invoices_by_client_id/<int:client_id>')

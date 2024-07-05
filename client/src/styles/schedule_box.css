@@ -1,0 +1,98 @@
+.schedule_box {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.services_box {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #a0a096;
+    border-left: none;
+    flex-grow: 1;
+    justify-content: flex-end;
+    /* background-color: rgb(221, 221, 221); */
+}
+
+.schedule_service_card {
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    align-content: center;
+    transition: 0.4s ease-in-out;
+    border: 1px solid #a0a096;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+}
+
+.schedule_service_card:not(:has(+ .schedule_service_card)) {
+    border-bottom: none;
+}
+
+
+.schedule_box .schedule_service_card:hover .show_on_hover {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+}
+
+.schedule_service_card .show_on_hover {
+    display: none;
+}
+
+.schedule_service_card .show_on_hover .status_owed {
+    color: red;
+}
+
+.schedule_service_card .show_on_hover .status_paid {
+    color: green;
+}
+
+.schedule_box .schedule_service_card:not(:hover) {
+    font-size: small;
+}
+
+.schedule_box .schedule_service_card:hover {
+    flex: 3;
+    font-size: large;
+    background-color: rgb(212, 212, 212);
+}
+
+.schedule_box .schedule_service_card:hover + .schedule_service_card {
+    flex: 2;
+    font-size: medium;
+    background-color: rgb(221, 221, 221)
+}
+
+.schedule_box .schedule_service_card:hover + .schedule_service_card + .schedule_service_card {
+    background-color: rgb(240, 240, 240)
+}
+
+.schedule_box .schedule_service_card:has(+ .schedule_service_card:hover) {
+    flex: 2;
+    font-size: medium;
+    background-color: rgb(221, 221, 221)
+}
+
+.schedule_box .schedule_service_card:has(+ .schedule_service_card + .schedule_service_card:hover) {
+    background-color: rgb(240, 240, 240)
+}
+
+.services_box_button {
+    border: none;
+    border-top: 1px solid #a0a096;
+    background-color: rgb(207, 207, 207);
+}
+
+.services_box_button:hover {
+    background-color: rgb(175, 175, 175);
+    font-weight: bold;
+}
+
+.active_service_box {
+    align-self: flex-end;
+    flex-basis: 100%;
+    border: 1px solid #a0a096;
+    border-top: none;
+}

@@ -1,0 +1,8 @@
+.schedule_service_card {
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    align-content: center;
+    transition: 0.4s ease-in-out;
+    background-color: rgb(221, 221, 221);
+}
