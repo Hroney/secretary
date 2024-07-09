@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ScheduleServiceCard from './ScheduleServiceCard';
 
 const ServiceList = ({ onChangeServices, setActiveService, setCreateInvoiceBool }) => {
     return (
         <div className='services_box'>
-            {onChangeServices.map((service, index) => (
+            {onChangeServices.map((service) => (
                 <ScheduleServiceCard
+                    key={service.invoice_service_id}
                     service={service}
-                    key={index}
                     setActiveService={setActiveService}
                     setCreateInvoiceBool={setCreateInvoiceBool}
                 />

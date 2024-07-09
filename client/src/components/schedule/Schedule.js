@@ -25,17 +25,18 @@ function Schedule() {
                 .then(response => response.json())
                 .then(data => {
                     setSchedule(data);
+                    console.log("schedule", data)
                 })
                 .catch(error => console.error('Error fetching schedule:', error));
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, forceRender]);
 
     const onChange = (nextValue) => {
         setValue(nextValue);
-        const scheduledItems = schedule.filter(item =>
+        const filtereditems = schedule.filter(item =>
             isSameDay(new Date(item.scheduled_date), nextValue)
         );
-        setOnChangeServices(scheduledItems);
+        setOnChangeServices([...filtereditems]);
         setCreateInvoiceBool(false)
         setActiveService(null)
     };
@@ -87,7 +88,13 @@ function Schedule() {
                         setCreateInvoiceBool={setCreateInvoiceBool}
                     />
 
-                    {createInvoiceBool ? <ScheduleCreateInvoice /> :
+                    {createInvoiceBool ?
+                        <ScheduleCreateInvoice
+                            value={value}
+                            forceRender={forceRender}
+                            setForceRender={setForceRender}
+                            onChange={onChange}
+                        /> :
                         <ActiveService
                             activeService={activeService}
                             onChangeServices={onChangeServices}

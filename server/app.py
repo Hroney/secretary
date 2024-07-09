@@ -44,6 +44,26 @@ class Clients(Resource):
         clients = Client.query.all()
         clients_dict = [client.to_dict() for client in clients]
         return clients_dict, 200
+    
+    def post(self):
+        try:
+            data = request.json
+            required_fields = ['name', 'email']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+                
+            new_client = Client(
+                name = data['name'],
+                email = data['email']
+            )
+            db.session.add(new_client)
+            db.session.commit()
+
+            return new_client.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred while processing the request: {e}'}, 500
 
 class Services(Resource):
     def get(self):
@@ -56,12 +76,59 @@ class Invoices(Resource):
         invoices = Invoice.query.all()
         invoices_dict = [invoice.to_dict() for invoice in invoices]
         return invoices_dict, 200
+    
+    def post(self):
+        try:
+            data = request.json
+            required_fields = ['client_id']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+                
+            new_invoice = Invoice(
+                client_id = data['client_id']
+            )
+            db.session.add(new_invoice)
+            db.session.commit()
+
+            return new_invoice.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred while processing the request: {e}'}, 500
 
 class InvoiceServices(Resource):
     def get(self):
         invoices = InvoiceService.query.all()
         invoices_dict = [invoice.to_dict() for invoice in invoices]
         return invoices_dict, 200
+    
+    def post(self):
+        try:
+            data = request.json
+            required_fields = ['invoice_id', 'service_id', 'price', 'paid_status', 'scheduled_date']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+
+            try:
+                scheduled_date = datetime.strptime(data['scheduled_date'], '%Y-%m-%dT%H:%M:%S.%fZ')
+            except ValueError:
+                return {'error': 'Invalid date format. Use ISO format (e.g., "2024-07-06T16:31:54.044096").'}, 400
+
+            new_invoice_service = InvoiceService(
+                invoice_id=data['invoice_id'],
+                service_id=data['service_id'],
+                price=data['price'],
+                paid_status=data['paid_status'],
+                scheduled_date=scheduled_date
+            )
+            db.session.add(new_invoice_service)
+            db.session.commit()
+
+            return new_invoice_service.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred while processing the request: {e}'}, 500
     
 class InvoiceServicesById(Resource):
     def get(self, id):

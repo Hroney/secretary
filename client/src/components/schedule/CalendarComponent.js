@@ -4,6 +4,8 @@ import { addMonths, subYears } from 'date-fns';
 import isSameDay from '../../helpers/isSameDay';
 
 const CalendarComponent = ({ value, onChange, schedule }) => {
+
+
     const tileContent = ({ date, view }) => {
         if (view === 'month') {
             const scheduledItems = schedule.filter(item =>
