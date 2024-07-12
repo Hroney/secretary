@@ -2,21 +2,23 @@ import React from 'react';
 import { Formik, Form, Field } from 'formik';
 
 const ActiveService = ({ activeService, onChangeServices, handlesubmit, createInvoiceBool }) => {
+
     return (
         <div className='active_service_box'>
-            {activeService && onChangeServices.length > 0 && !createInvoiceBool &&
+            {activeService && onChangeServices.length > 0 && !createInvoiceBool
+                &&
                 <>
                     <div>
                         {activeService[0].service}
                     </div>
                     <div>
-                        {activeService[0].client.name}
+                        {activeService[1].client.name}
                     </div>
                     <Formik
                         enableReinitialize
                         initialValues={{
-                            price: activeService[1][0].price,
-                            paid_status: activeService[1][0].paid_status
+                            price: activeService[0].price,
+                            paid_status: activeService[0].paid_status
                         }}
                         onSubmit={handlesubmit}
                     >
@@ -27,7 +29,7 @@ const ActiveService = ({ activeService, onChangeServices, handlesubmit, createIn
                                     <Field
                                         type="number"
                                         name="price"
-                                        placeholder={activeService[1][0].price}
+                                        placeholder={activeService[0].price}
                                         style={{ width: '60px', textAlign: 'right' }}
                                         onWheel={(e) => {
                                             const newValue = values.price + (e.deltaY < 0 ? 1 : -1);

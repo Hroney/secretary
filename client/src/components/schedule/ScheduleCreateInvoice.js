@@ -5,25 +5,19 @@ import { useEffect, useState } from 'react';
 function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
     const [serviceList, setServiceList] = useState([])
     const [clientList, setClientList] = useState([])
+    const [initialValue, setInitialValue] = useState(1)
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         fetch(`http://localhost:5555/clients_by_user_id/${userId}`)
             .then(response => response.json())
             .then(client_by_user_data => {
-                fetch(`http://localhost:5555/clients`)
-                    .then(response => response.json())
-                    .then(client_data => {
-                        for (const client in client_data) {
-                            for (const client_user in client_by_user_data) {
-                                if (client_by_user_data[client_user].id === client_data[client].id) {
-                                    setClientList([...clientList, client_data[client]])
-                                }
-                            }
-                        }
-                    })
+                console.log('client_by_user_data', client_by_user_data)
+                setClientList(client_by_user_data)
+                setInitialValue(client_by_user_data[0][0].client_id)
             })
             .catch(error => console.error('Error fetching schedule:', error));
+        console.log('clientList', clientList)
         fetch(`http://localhost:5555/services`)
             .then(response => response.json())
             .then(data => {
@@ -35,9 +29,9 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
 
 
     const handleSubmit = async (values) => {
-        console.log(values.client_id)
+        console.log('client_id', values.client_id)
         try {
-            let clientIdNum = Number(values.client_id) || 1
+            let clientIdNum = Number(values.client_id)
             console.log("clientIdNum", clientIdNum)
             const invoiceResponse = await fetch(`http://localhost:5555/invoices`, {
                 method: 'POST',
@@ -81,13 +75,12 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
         setForceRender(prev => !prev)
     };
 
-
     return (
         <div className="schedule_create_invoice_box" >
             no you didnt
             <Formik
                 enableReinitialize
-                initialValues={{ services: [{ service_id: 1, price: 1 }], client_id: 1 }}
+                initialValues={{ services: [{ service_id: 1, price: 1 }], client_id: initialValue }}
                 onSubmit={handleSubmit}
             >
                 {({ values }) => (
@@ -98,8 +91,8 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                                 name="client_id"
                             >
                                 {clientList.map((client) => (
-                                    <option key={client.id} value={client.id}>
-                                        {client.name}
+                                    <option key={client[1].id} value={client[1].id}>
+                                        {client[1].name}
                                     </option>
                                 ))}
                             </Field>

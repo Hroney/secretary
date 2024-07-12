@@ -25,11 +25,14 @@ function Schedule() {
                 .then(response => response.json())
                 .then(data => {
                     setSchedule(data);
-                    console.log("schedule", data)
+                    const filtereditems = data.filter(item =>
+                        isSameDay(new Date(item.scheduled_date), value)
+                    );
+                    setOnChangeServices([...filtereditems])
                 })
                 .catch(error => console.error('Error fetching schedule:', error));
         }
-    }, [isLoggedIn, forceRender]);
+    }, [isLoggedIn, forceRender, value]);
 
     const onChange = (nextValue) => {
         setValue(nextValue);
@@ -42,7 +45,8 @@ function Schedule() {
     };
 
     const handlesubmit = (values) => {
-        const serviceId = activeService[0].invoice_service_id;
+        const serviceId = activeService[1].invoice_service_id;
+
         fetch(`http://localhost:5555/invoice_service/${serviceId}`, {
             method: 'PATCH',
             headers: {
@@ -58,15 +62,14 @@ function Schedule() {
                             if (csl.id === data.id) {
                                 csl.price = data.price;
                                 csl.paid_status = data.paid_status;
-                                activeService[1][0].price = data.price;
-                                activeService[1][0].paid_status = data.paid_status;
+                                activeService[1].price = data.price;
+                                activeService[1].paid_status = data.paid_status;
                             }
                         });
                     }
                 });
                 setForceRender(prev => !prev);
                 console.log('Success:', data);
-                console.log('onChangeServices', onChangeServices);
             })
             .catch((error) => {
                 console.error('Error:', error);
