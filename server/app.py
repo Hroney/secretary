@@ -161,7 +161,7 @@ class Login(Resource):
 class ClientsByUserID(Resource):
     def get(self, user_id):
         clients = UserClients.query.filter_by(user_id=user_id).all()
-        clients_dict = [client.to_dict() for client in clients]
+        clients_dict = [[client.to_dict(), client.client.to_dict()] for client in clients]
         return clients_dict, 200
 
 class ClientByID(Resource):
@@ -180,11 +180,14 @@ class InvoicesByClientID(Resource):
 class Schedule(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
+        print('user', user.id)
         if user:
             clients = UserClients.query.filter_by(user_id=user.id).all()
+            print('clients', clients)
             schedule = []
             for client in clients:
-                invoices = Invoice.query.filter_by(client_id=client.id).all()
+                print('client', client.to_dict())
+                invoices = Invoice.query.filter_by(client_id=client.client_id).all()
                 for invoice in invoices:
                     invoice_dict = invoice.to_dict()
                     services_list = invoice_dict['services']
@@ -200,6 +203,9 @@ class Schedule(Resource):
             return schedule, 200
         else:
             return jsonify({'error': 'User not found'}), 404
+        
+
+
 
 
 api.add_resource(Index, '/')
