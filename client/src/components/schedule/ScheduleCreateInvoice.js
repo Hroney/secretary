@@ -12,12 +12,10 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
         fetch(`http://localhost:5555/clients_by_user_id/${userId}`)
             .then(response => response.json())
             .then(client_by_user_data => {
-                console.log('client_by_user_data', client_by_user_data)
                 setClientList(client_by_user_data)
                 setInitialValue(client_by_user_data[0][0].client_id)
             })
             .catch(error => console.error('Error fetching schedule:', error));
-        console.log('clientList', clientList)
         fetch(`http://localhost:5555/services`)
             .then(response => response.json())
             .then(data => {
@@ -32,7 +30,6 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
         console.log('client_id', values.client_id)
         try {
             let clientIdNum = Number(values.client_id)
-            console.log("clientIdNum", clientIdNum)
             const invoiceResponse = await fetch(`http://localhost:5555/invoices`, {
                 method: 'POST',
                 headers: {
@@ -42,7 +39,6 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
             });
             const invoiceData = await invoiceResponse.json();
             const invoice_id = invoiceData.id;
-            console.log("invoiceData", invoiceData)
             for (const service in values.services) {
                 try {
                     let pricenum = Number(values.services[service].price) || 1
