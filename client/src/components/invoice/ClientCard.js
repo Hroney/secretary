@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import InvoiceCard from "./InvoiceCard";
+import "../../styles/clientcard.css"
 
 function ClientCard({ client }) {
+    console.log("clientcard client", client)
     const [clientObj, setClientObj] = useState(null);
     const [invoiceList, setInvoiceList] = useState([]);
     const [extended, setExtended] = useState(false);
@@ -9,7 +11,7 @@ function ClientCard({ client }) {
     useEffect(() => {
         const fetchClient = async () => {
             try {
-                const response = await fetch(`http://localhost:5555/client_by_id/${client.id}`, {
+                const response = await fetch(`http://localhost:5555/client_by_id/${client[1].id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -27,7 +29,7 @@ function ClientCard({ client }) {
         };
         const fetchInvoices = async () => {
             try {
-                const response = await fetch(`http://localhost:5555/invoices_by_client_id/${client.id}`, {
+                const response = await fetch(`http://localhost:5555/invoices_by_client_id/${client[1].id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -45,26 +47,26 @@ function ClientCard({ client }) {
         };
         fetchClient();
         fetchInvoices();
-    }, [client.id]);
+    }, [client]);
 
     if (!clientObj) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div >
-            <p>
+        <div className="clientcard">
+            <div className="clientname">
                 {clientObj.name}
-                <button onClick={() => setExtended(!extended)}>See Details</button>
-                {!extended ? null :
-                    <div>
-                        {invoiceList.length === 0 ? "No Invoices" : "Invoices"}
-                        {invoiceList.map((invoice, index) => (
-                            <InvoiceCard key={invoice.id} invoice={invoice} index={index} />
-                        ))}
-                    </div>
-                }
-            </p>
+            </div>
+            <button onClick={() => setExtended(!extended)}>See Details</button>
+            {!extended ? null :
+                <div className="invoicebox">
+                    {invoiceList.length === 0 ? "No Invoices" : "Invoices"}
+                    {invoiceList.map((invoice, index) => (
+                        <InvoiceCard key={invoice.id} invoice={invoice} index={index} />
+                    ))}
+                </div>
+            }
         </div>
     );
 }

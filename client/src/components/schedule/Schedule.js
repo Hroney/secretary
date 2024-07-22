@@ -80,30 +80,30 @@ function Schedule() {
         <div>
             {!isLoggedIn ? redirectCheck(isLoggedIn) :
                 <div className='schedule_box'>
-                    <CalendarComponent
-                        value={value}
-                        onChange={onChange}
-                        schedule={schedule}
-                    />
+                    <div className='left_column'>
+                        <CalendarComponent
+                            value={value}
+                            onChange={onChange}
+                            schedule={schedule}
+                        />
+                        {createInvoiceBool ?
+                            <ScheduleCreateInvoice
+                                value={value}
+                                forceRender={forceRender}
+                                setForceRender={setForceRender}
+                                onChange={onChange}
+                            /> : <ActiveService
+                                activeService={activeService}
+                                onChangeServices={onChangeServices}
+                                handlesubmit={handlesubmit}
+                                createInvoiceBool={createInvoiceBool}
+                            />}
+                    </div>
                     <ServiceList
                         onChangeServices={onChangeServices}
                         setActiveService={setActiveService}
                         setCreateInvoiceBool={setCreateInvoiceBool}
                     />
-
-                    {createInvoiceBool ?
-                        <ScheduleCreateInvoice
-                            value={value}
-                            forceRender={forceRender}
-                            setForceRender={setForceRender}
-                            onChange={onChange}
-                        /> :
-                        <ActiveService
-                            activeService={activeService}
-                            onChangeServices={onChangeServices}
-                            handlesubmit={handlesubmit}
-                            createInvoiceBool={createInvoiceBool}
-                        />}
                 </div>
             }
         </div>

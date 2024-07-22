@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import '../../styles/navbar.css'
 
 
 
@@ -8,17 +9,27 @@ function NavBar({ isLoggedIn }) {
     return (
         <nav className="nav-bar">
             {!isLoggedIn && (
-                <>
-                    <NavLink to="/home" className="nav-link" > Home </NavLink>
-                    <NavLink to="/login" className="nav-link" > Login </NavLink>
-                </>
+                <ul>
+                    <li>
+                        <NavLink to="/home" className="nav-link" > Home </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/login" className="nav-link" > Login </NavLink>
+                    </li>
+                </ul>
             )}
             {isLoggedIn && (
-                <>
-                    <NavLink to='/schedule' className='nav-link'>Schedule</NavLink>
-                    <NavLink to='/invoice' className='nav-link'>Invoices</NavLink>
-                    <NavLink to='/logout' className='nav-link'>Logout</NavLink>
-                </>
+                <ul>
+                    <li>
+                        <NavLink to='/schedule' className='nav-link'>Schedule</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to='/invoice' className='nav-link'>Invoices</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to='/logout' className='nav-link'>Logout</NavLink>
+                    </li>
+                </ul>
             )}
         </nav>
     )

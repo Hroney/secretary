@@ -10,7 +10,9 @@ function InvoiceCard({ invoice, index }) {
 
         return (
             <div style={{ border: '1px solid black', marginBottom: '1px' }} >
-                <div>Invoice number: {index + 1}</div>
+                <div>
+                    Invoice number: {index + 1}
+                </div>
                 <div>
                     total: {invoice.total}
                 </div>

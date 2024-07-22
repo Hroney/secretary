@@ -1,0 +1,65 @@
+.schedule_create_invoice_box {
+    background-color: rgb(223, 236, 236);
+    border: 1px solid #a0a096;
+    margin-top: 1px;
+}
+
+.schedule_create_invoice_select_client select,
+.schedule_create_invoice_select_service select {
+    justify-content: center;
+    flex: 1;
+    text-transform: capitalize;
+    appearance: none;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid #a0a096;
+    margin-left: 1px;
+    margin-right: 1px;
+    outline: none;
+}
+
+.schedule_create_invoice_set_price input[type="number"] {
+    justify-content: center;
+    flex: 1;
+    appearance: none;
+    cursor: text;
+    background-color: transparent;
+    border: 1px solid #a0a096;
+    margin-left: 1px;
+    margin-right: 1px;
+    outline: none;
+}
+
+.schedule_create_invoice_set_price input[type="number"]:focus {
+    background-color: rgb(197, 209, 209);
+}
+
+.schedule_create_invoice_select_service,
+.schedule_create_invoice_set_price,
+.schedule_create_invoice_select_client {
+    display: flex;
+    margin-top: 1px;
+}
+
+.schedule_create_invoice_remove_service,
+.schedule_create_invoice_add_service,
+.schedule_create_invoice_submit {
+    margin-left: 1px;
+    width: 114.5px;
+    background-color: rgb(197, 209, 209);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.schedule_create_invoice_remove_service:hover,
+.schedule_create_invoice_add_service:hover,
+.schedule_create_invoice_submit:hover {
+    background-color: rgb(174, 185, 185);
+}
+
+
+/* 
+button:hover {
+    background-color: rgb(174, 185, 185);
+} */

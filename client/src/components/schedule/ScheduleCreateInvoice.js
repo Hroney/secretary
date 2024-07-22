@@ -1,6 +1,7 @@
 import '../../styles/schedule_box.css';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { useEffect, useState } from 'react';
+import '../../styles/schedule_invoice.css'
 
 function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
     const [serviceList, setServiceList] = useState([])
@@ -73,7 +74,6 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
 
     return (
         <div className="schedule_create_invoice_box" >
-            no you didnt
             <Formik
                 enableReinitialize
                 initialValues={{ services: [{ service_id: 1, price: 1 }], client_id: initialValue }}
@@ -81,7 +81,8 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
             >
                 {({ values }) => (
                     <Form>
-                        <div>
+                        <div className='schedule_create_invoice_select_client'>
+                            Client:
                             <Field
                                 as="select"
                                 name="client_id"
@@ -95,11 +96,11 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                         </div>
                         <FieldArray name="services">
                             {({ insert, remove, push }) => (
-                                <div>
+                                <>
                                     {values.services.length > 0 &&
                                         values.services.map((service, index) => (
-                                            <div key={index}>
-                                                <div>
+                                            <>
+                                                <div className='schedule_create_invoice_select_service'>
                                                     Service:
                                                     <Field
                                                         as="select"
@@ -112,7 +113,7 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                                                         ))}
                                                     </Field>
                                                 </div>
-                                                <div>
+                                                <div className='schedule_create_invoice_set_price'>
                                                     Price:
                                                     <Field
                                                         type="number"
@@ -122,21 +123,23 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                                                 <button
                                                     type="button"
                                                     onClick={() => remove(index)}
+                                                    className='schedule_create_invoice_remove_service'
                                                 >
                                                     Remove Service
                                                 </button>
-                                            </div>
+                                            </>
                                         ))}
                                     <button
                                         type="button"
                                         onClick={() => push({ service_id: '', price: '' })}
+                                        className='schedule_create_invoice_add_service'
                                     >
                                         Add Service
                                     </button>
-                                </div>
+                                </>
                             )}
                         </FieldArray>
-                        <button type="submit">
+                        <button type="submit" className='schedule_create_invoice_submit'>
                             Submit
                         </button>
                     </Form>

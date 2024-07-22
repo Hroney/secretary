@@ -13,7 +13,7 @@ function ScheduleServiceCard({ service, setActiveService, setCreateInvoiceBool }
         <div className="schedule_service_card" onClick={() => handleClick(service_info, service)}>
             {service.service}
             <div className="show_on_hover">
-                <div>
+                <div className="show_on_hover_name">
                     {service.client.name}
                 </div>
                 <div className={service_info[0].paid_status ? "status_paid" : "status_owed"}>

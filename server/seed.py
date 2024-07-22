@@ -5,6 +5,9 @@ from random import randint, choice as rc
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timedelta
 
+import os
+import tempfile
+
 # Remote library imports
 from faker import Faker
 
@@ -14,17 +17,29 @@ from models import db, User, Client, Service, Invoice, InvoiceService, UserClien
 
 fake = Faker()
 
+TEMP_FILE_PATH = 'user_secrets.txt'
+
 def create_users():
     users = []
-    for _ in range(5):
-        user = User(
-            username=fake.user_name()
-        )
-        password = fake.password()
-        user.password_hash = password
-        print('user', user.username, 'password', password)
-        users.append(user)
+
+    # Open the file for writing (this will overwrite any existing data)
+    with open('user_secrets.txt', 'w') as temp_file:
+        for _ in range(5):
+            user = User(
+                username=fake.user_name()
+            )
+            password = fake.password()
+            user.password_hash = password
+            
+            # Write the username and password to the file
+            temp_file.write(f'User: {user.username}, Password: {password}\n')
+            
+            users.append(user)
+
+    print("User data written to user_secrets.txt")
+    
     return users
+
 
 def create_clients():
     clients = []

@@ -13,7 +13,7 @@ const ServiceList = ({ onChangeServices, setActiveService, setCreateInvoiceBool 
                     setCreateInvoiceBool={setCreateInvoiceBool}
                 />
             ))}
-            <button className='services_box_button' onClick={() => setCreateInvoiceBool(true)}>Create Invoice</button>
+            <button className='services_box_button' onClick={() => setCreateInvoiceBool(true)}>+</button>
         </div>
     );
 };
