@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import InvoiceCard from "./InvoiceCard";
-import "../../styles/clientcard.css"
+import "../../styles/clientcard.css";
 
 function ClientCard({ client }) {
-    console.log("clientcard client", client)
     const [clientObj, setClientObj] = useState(null);
     const [invoiceList, setInvoiceList] = useState([]);
     const [extended, setExtended] = useState(false);
@@ -54,19 +53,19 @@ function ClientCard({ client }) {
     }
 
     return (
-        <div className="clientcard">
-            <div className="clientname">
+        <div className={`client_card_container ${extended ? 'extended' : ''}`}>
+            <div className="client_card_name">
                 {clientObj.name}
             </div>
-            <button onClick={() => setExtended(!extended)}>See Details</button>
-            {!extended ? null :
-                <div className="invoicebox">
-                    {invoiceList.length === 0 ? "No Invoices" : "Invoices"}
-                    {invoiceList.map((invoice, index) => (
-                        <InvoiceCard key={invoice.id} invoice={invoice} index={index} />
-                    ))}
+            <button onClick={() => setExtended(!extended)} className={`client_card_button ${extended ? 'extended' : ''}`}>See Details</button>
+            <div className="invoice_box">
+                <div className="invoice_box_title">
+                    {invoiceList.length === 0 ? "No Invoices" : "Invoice(s)"}
                 </div>
-            }
+                {invoiceList.map((invoice, index) => (
+                    <InvoiceCard key={invoice.id} invoice={invoice} index={index} />
+                ))}
+            </div>
         </div>
     );
 }

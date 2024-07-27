@@ -32,6 +32,7 @@
     margin-left: 1px;
     background: rgb(223, 236, 236);
     flex-grow: 2;
+    max-height: 25px;
     text-transform: capitalize;
 }
 
@@ -66,19 +67,12 @@
     font-size: small;
 }
 
-.schedule_service_card:hover .schedule_service_card:not(:hover) {
-    color: rgba(0, 0, 0, 0.13);
-}
-
-.schedule_box .schedule_service_card:has(+ .schedule_service_card:hover) {
-    flex: 2;
-    font-size: medium;
-}
 
 .schedule_box .schedule_service_card:hover {
-    flex: 3;
-    font-size: large;
-    background: rgb(197, 209, 209)
+    flex: 2;
+    max-height: 50px;
+    font-size: medium;
+    background: rgb(197, 209, 209);
 }
 
 .services_box_button {

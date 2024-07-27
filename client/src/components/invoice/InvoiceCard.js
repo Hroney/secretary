@@ -9,28 +9,25 @@ function InvoiceCard({ invoice, index }) {
 
 
         return (
-            <div style={{ border: '1px solid black', marginBottom: '1px' }} >
-                <div>
-                    Invoice number: {index + 1}
+            <div className={`invoice_card_container ${expand ? 'extended' : ''}`}>
+                <div className="invoice_card_number">
+                    {index + 1}
                 </div>
-                <div>
+                <div className="invoice_card_total">
                     total: {invoice.total}
                 </div>
-                <div>
+                <div className="invoice_card_paid">
                     Paid in full: {invoice.paid_in_full ? "yes" : "no"}
                 </div>
-                <button onClick={() => setExpand(!expand)}> See Details </button>
-                {!expand ? null :
-                    <div>
-                        <big>Services</big>
-                        {invoice.services.map((service, index) => (
-                            <InvoiceServiceCard
-                                key={index}
-                                service={service}
-                            />
-                        ))}
-                    </div>
-                }
+                <button onClick={() => setExpand(!expand)} className={`invoice_card_button ${expand ? 'extended' : ''}`}> See Details </button>
+                <div className="invoice_card_InvoiceServiceCard">
+                    {invoice.services.map((service, index) => (
+                        <InvoiceServiceCard
+                            key={index}
+                            service={service}
+                        />
+                    ))}
+                </div>
             </div>)
     } else return (
         <div>

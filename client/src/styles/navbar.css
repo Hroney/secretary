@@ -13,11 +13,21 @@ ul {
     padding: 0;
 }
 
+li {
+    width: 100%;
+    text-align: center;
+    align-content: center;
+}
+
+li:has(a:-webkit-any-link:hover) {
+    background: rgb(197, 209, 209)
+}
+
 a:-webkit-any-link {
-    color: black;
+    color: rgb(93, 99, 99);
     text-decoration: none;
 }
 
 a:-webkit-any-link:hover {
-    color: rgb(197, 209, 209);
+    color: black;
 }

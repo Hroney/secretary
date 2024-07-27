@@ -2,22 +2,22 @@ import React, { useState } from "react"
 
 
 function InvoiceServiceCard({ service }) {
-    const [expanded, setExpanded] = useState(false)
 
     return (
 
-        <div>
-            <div>
+        <div className="invoice_service_card_container">
+            <div className="invoice_service_card_name">
                 name: {service.name}
             </div>
-            <button onClick={() => setExpanded(!expanded)}>See Details</button>
-            {!expanded ? null :
-                <div>
-                    price: {service.price}
-                    paid: {service.paid_status ? "yes" : "no"}
-                    date: {service.scheduled_date}
-                </div>
-            }
+            <div className="invoice_service_card_price">
+                price: {service.price}
+            </div>
+            <div className="invoice_service_card_paid">
+                paid: {service.paid_status ? "yes" : "no"}
+            </div>
+            <div className="invoice_service_card_date">
+                {new Date(service.scheduled_date).toDateString()}
+            </div>
         </div>
     )
 

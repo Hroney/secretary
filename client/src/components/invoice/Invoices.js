@@ -2,6 +2,7 @@ import { useOutletContext } from "react-router-dom";
 import redirectCheck from "../../helpers/redirectCheck";
 import { useEffect, useState } from "react";
 import ClientCard from './ClientCard';
+import '../../styles/invoice_container.css'
 
 function Invoices() {
     const [isLoggedIn, setIsLoggedIn] = useOutletContext();
@@ -35,7 +36,7 @@ function Invoices() {
     return (
         <div>
             {!isLoggedIn ? redirectCheck(isLoggedIn) :
-                <div>
+                <div className="invoice-container">
                     {clientList.map(client => (
                         <ClientCard key={client.id} client={client} />
                     ))}
