@@ -27,6 +27,9 @@ function NavBar({ isLoggedIn }) {
                         <NavLink to='/invoice' className='nav-link'>Invoices</NavLink>
                     </li>
                     <li>
+                        <NavLink to='/customize' className='nav-link'>Customize</NavLink>
+                    </li>
+                    <li>
                         <NavLink to='/logout' className='nav-link'>Logout</NavLink>
                     </li>
                 </ul>

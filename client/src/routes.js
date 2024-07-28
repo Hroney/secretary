@@ -5,6 +5,7 @@ import Schedule from './components/schedule/Schedule'
 import Invoices from './components/invoice/Invoices'
 import { Navigate } from 'react-router-dom';
 import Logout from './components/main/Logout';
+import Customize from './components/customize/Customize';
 
 const routes = [
 
@@ -31,6 +32,10 @@ const routes = [
             {
                 path: 'invoice',
                 element: <Invoices />,
+            },
+            {
+                path: 'customize',
+                element: <Customize />,
             },
             {
                 path: 'logout',
