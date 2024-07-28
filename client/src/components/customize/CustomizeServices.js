@@ -18,7 +18,7 @@ function CustomizeServices() {
                 })
                 .catch(error => console.error('Error fetching services:', error));
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, newServices]);
 
     const handleClick = () => {
         setButtonActivated(!buttonActivated);

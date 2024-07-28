@@ -33,7 +33,7 @@ function CustomizeClient() {
             fetchClients();
 
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, newClients]);
 
     const handleClick = () => {
         setButtonActivated(!buttonActivated);
