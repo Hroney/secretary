@@ -94,12 +94,12 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                                 ))}
                             </Field>
                         </div>
-                        <FieldArray name="services">
+                        <FieldArray name="services" >
                             {({ insert, remove, push }) => (
                                 <>
                                     {values.services.length > 0 &&
                                         values.services.map((service, index) => (
-                                            <>
+                                            <div key={index}>
                                                 <div className='schedule_create_invoice_select_service'>
                                                     Service:
                                                     <Field
@@ -127,7 +127,7 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                                                 >
                                                     Remove Service
                                                 </button>
-                                            </>
+                                            </div>
                                         ))}
                                     <button
                                         type="button"

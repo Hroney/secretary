@@ -37,9 +37,9 @@ function Invoices() {
         <div>
             {!isLoggedIn ? redirectCheck(isLoggedIn) :
                 <div className="invoice-container">
-                    {clientList.map(client => (
-                        <ClientCard key={client.id} client={client} />
-                    ))}
+                    {clientList.map(client => {
+                        return <ClientCard key={client[1].id} client={client} />
+                    })}
                 </div>
             }
         </div>

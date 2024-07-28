@@ -33,7 +33,7 @@ function CustomizeAddClient({ id, handleRemove }) {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('success', data)
+                        console.log('success')
                     })
                 handleRemove(id);
             })

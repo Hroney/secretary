@@ -12,7 +12,6 @@ function CustomizeAddServices({ id, handleRemove }) {
 
 
     const handleSubmit = (values) => {
-        console.log('values', values)
         fetch(`http://localhost:5555/services`, {
             method: 'POST',
             headers: {
