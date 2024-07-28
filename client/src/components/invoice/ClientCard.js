@@ -53,7 +53,7 @@ function ClientCard({ client }) {
     }
 
     return (
-        <div className={`client_card_container ${extended ? 'extended' : ''}`}>
+        <div className={`client_card_container ${extended ? 'extended' : ''}`} key={clientObj.id}>
             <div className="client_card_name">
                 {clientObj.name}
             </div>
