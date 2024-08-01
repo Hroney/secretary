@@ -271,6 +271,17 @@ class ServicesByUser(Resource):
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred while processing the request: {e}'}, 500
+    def patch(self, id):
+        try:
+            record = Service.query.filter_by(id=id).first()
+            for attr in request.json:
+                setattr(record, attr, request.json[attr])
+            db.session.add(record)
+            db.session.commit()
+            return record.to_dict(), 200
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error {e} occured'}, 500
 
 
 api.add_resource(Index, '/')
