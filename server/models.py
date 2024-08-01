@@ -13,6 +13,7 @@ class User(db.Model, SerializerMixin):
     _password_hash = db.Column(db.String)
 
     clients = db.relationship('UserClients', back_populates='user')
+    services = db.relationship('UserServices', back_populates='user')
 
     def to_dict(self):
         return {
@@ -43,6 +44,9 @@ class Client(db.Model, SerializerMixin):
     name = db.Column(db.String)
     email = db.Column(db.String)
 
+    invoices = db.relationship('Invoice', back_populates='client', lazy=True)
+    users = db.relationship('UserClients', back_populates='client')
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -56,14 +60,14 @@ class Client(db.Model, SerializerMixin):
     def paid_in_total(self):
         return all(invoice.paid_in_full for invoice in self.invoices)
 
-    invoices = db.relationship('Invoice', back_populates='client', lazy=True)
-    users = db.relationship('UserClients', back_populates='client')
-    
 class Service(db.Model, SerializerMixin):
     __tablename__ = 'services'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+
+    invoices = db.relationship('InvoiceService', back_populates='service')
+    users = db.relationship('UserServices', back_populates='service')
 
     def to_dict(self):
         return {
@@ -72,27 +76,26 @@ class Service(db.Model, SerializerMixin):
             'invoices': [invoice.to_dict() for invoice in self.invoices]
         }
 
-
-    invoices = db.relationship('InvoiceService', back_populates='service')
-
 class Invoice(db.Model, SerializerMixin):
     __tablename__ = 'invoices'
     serialize_only = ('id', 'client_id', 'total')
 
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    client = db.relationship('Client', back_populates='invoices', lazy=True)
+    services = db.relationship('InvoiceService', back_populates='invoice')
 
     def to_dict(self):
         return {
             'id': self.id,
+            'user_id': self.user_id,
             'client': {'id': self.client.id, 'name': self.client.name},
             'total': round(self.total,2),
             'paid_in_full': self.paid_in_full,
             'services': [service.to_dict() for service in self.services]
         }
-
-    client = db.relationship('Client', back_populates='invoices', lazy=True)
-    services = db.relationship('InvoiceService', back_populates='invoice')
 
     @property
     def total(self):
@@ -112,6 +115,9 @@ class InvoiceService(db.Model, SerializerMixin):
     paid_status = db.Column(db.Boolean)
     scheduled_date = db.Column(db.DateTime, default=datetime.utcnow)
 
+    invoice = db.relationship('Invoice', back_populates='services')
+    service = db.relationship('Service', back_populates='invoices')
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -121,15 +127,15 @@ class InvoiceService(db.Model, SerializerMixin):
             'scheduled_date': self.scheduled_date.isoformat() if self.scheduled_date else None
         }
 
-    invoice = db.relationship('Invoice', back_populates='services')
-    service = db.relationship('Service', back_populates='invoices')
-
 class UserClients(db.Model, SerializerMixin):
     __tablename__ = 'user_clients'
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
+
+    user = db.relationship('User', back_populates='clients')
+    client = db.relationship('Client', back_populates='users')
 
     def to_dict(self):
         return {
@@ -138,7 +144,19 @@ class UserClients(db.Model, SerializerMixin):
             'client_id': self.client_id
         }
 
+class UserServices(db.Model, SerializerMixin):
+    __tablename__ = 'user_services'
 
-    user = db.relationship('User', back_populates='clients')
-    client = db.relationship('Client', back_populates='users')
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    service_id = db.Column(db.Integer, db.ForeignKey('services.id'))
 
+    user = db.relationship('User', back_populates='services')
+    service = db.relationship('Service', back_populates='users')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'service_id': self.service_id,
+        }

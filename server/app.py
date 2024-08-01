@@ -10,7 +10,7 @@ from flask_restful import Resource
 from config import app, db, api
 from datetime import datetime
 # Add your model imports
-from models import db, User, Invoice, Client, InvoiceService, Service, UserClients
+from models import db, User, Invoice, Client, InvoiceService, Service, UserClients, UserServices
 
 # Views go here!
 
@@ -70,6 +70,25 @@ class Services(Resource):
         services = Service.query.all()
         services_dict = [service.to_dict() for service in services]
         return services_dict, 200
+    def post(self):
+        try:
+            data = request.json
+            required_fields = ['name']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+            
+            new_service = Service(
+                name = data['name']
+            )
+            db.session.add(new_service)
+            db.session.commit()
+
+            return new_service.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred while processing the request: {e}'}, 500
+    
 
 class Invoices(Resource):
     def get(self):
@@ -163,6 +182,27 @@ class ClientsByUserID(Resource):
         clients = UserClients.query.filter_by(user_id=user_id).all()
         clients_dict = [[client.to_dict(), client.client.to_dict()] for client in clients]
         return clients_dict, 200
+    
+class PostClientUserRelation(Resource):    
+    def post(self, user_id, client_id):
+        try:
+            data = request.json
+            required_fields = ['user_id', 'client_id']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+                
+            new_relation = UserClients(
+                user_id = data['user_id'],
+                client_id = data['client_id']
+            )
+            db.session.add(new_relation)
+            db.session.commit()
+
+            return new_relation.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred while processing the request: {e}'}, 500
 
 class ClientByID(Resource):
     def get(self, id):
@@ -204,8 +244,33 @@ class Schedule(Resource):
         else:
             return jsonify({'error': 'User not found'}), 404
         
+class ServicesByUser(Resource):
+    def get(self, id):
+        services = UserServices.query.filter_by(user_id=id).all()
+        services_dict = [service.to_dict()['service_id'] for service in services]
+        service_list = [Service.query.filter_by(id=service).first() for service in services_dict]
+        service_list_dict = [service.to_dict() for service in service_list]
+        return service_list_dict, 200
+    def post(self, id):
+        try:
+            data = request.json
+            required_fields = ['service_id']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+            
+            new_service = UserServices(
+                service_id = data['service_id'],
+                user_id = id
+            )
+            
+            db.session.add(new_service)
+            db.session.commit()
 
-
+            return new_service.to_dict(), 201
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error occurred while processing the request: {e}'}, 500
 
 
 api.add_resource(Index, '/')
@@ -216,10 +281,13 @@ api.add_resource(Invoices, '/invoices')
 api.add_resource(InvoiceServices, '/invoice_services')
 api.add_resource(InvoiceServicesById, '/invoice_service/<int:id>')
 api.add_resource(ClientsByUserID, '/clients_by_user_id/<int:user_id>')
+api.add_resource(PostClientUserRelation, '/post_client_user_relation/<int:user_id>_<int:client_id>')
 api.add_resource(ClientByID, '/client_by_id/<int:id>')
 api.add_resource(InvoicesByClientID, '/invoices_by_client_id/<int:client_id>')
 api.add_resource(Login, '/login')
 api.add_resource(Schedule, '/schedule/<int:id>')
+api.add_resource(ServicesByUser, '/services_by_user_id/<int:id>')
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
