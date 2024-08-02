@@ -23,17 +23,16 @@ function CustomizeAddClient({ id, handleRemove }) {
         })
             .then(response => response.json())
             .then(data => {
-                let relation_data = { 'user_id': localStorage.getItem('userId'), 'client_id': data.id }
-                fetch(`http://localhost:5555/post_client_user_relation/${relation_data.user_id}_${relation_data.client_id}`, {
+                fetch(`http://localhost:5555/clients_by_user_id/${localStorage.getItem('userId')}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(relation_data),
+                    body: JSON.stringify(data.id),
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log('success')
+                        console.log('success: ', data)
                     })
                 handleRemove(id);
             })

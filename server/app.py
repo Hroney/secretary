@@ -25,7 +25,7 @@ class Index(Resource):
             "4_invoices": "/invoices",
             "5_invoice services": "/invoice_services",
 
-            
+
         }
         response = make_response(
             response_dict,
@@ -44,7 +44,7 @@ class Clients(Resource):
         clients = Client.query.all()
         clients_dict = [client.to_dict() for client in clients]
         return clients_dict, 200
-    
+
     def post(self):
         try:
             data = request.json
@@ -52,7 +52,7 @@ class Clients(Resource):
             for field in required_fields:
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
-                
+
             new_client = Client(
                 name = data['name'],
                 email = data['email']
@@ -77,7 +77,7 @@ class Services(Resource):
             for field in required_fields:
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
-            
+
             new_service = Service(
                 name = data['name']
             )
@@ -88,14 +88,14 @@ class Services(Resource):
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred while processing the request: {e}'}, 500
-    
+
 
 class Invoices(Resource):
     def get(self):
         invoices = Invoice.query.all()
         invoices_dict = [invoice.to_dict() for invoice in invoices]
         return invoices_dict, 200
-    
+
     def post(self):
         try:
             data = request.json
@@ -103,7 +103,7 @@ class Invoices(Resource):
             for field in required_fields:
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
-                
+
             new_invoice = Invoice(
                 client_id = data['client_id']
             )
@@ -120,7 +120,7 @@ class InvoiceServices(Resource):
         invoices = InvoiceService.query.all()
         invoices_dict = [invoice.to_dict() for invoice in invoices]
         return invoices_dict, 200
-    
+
     def post(self):
         try:
             data = request.json
@@ -148,12 +148,12 @@ class InvoiceServices(Resource):
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred while processing the request: {e}'}, 500
-    
+
 class InvoiceServicesById(Resource):
     def get(self, id):
         invoice = InvoiceService.query.filter_by(id=id).first()
         return invoice.to_dict(), 200
-    
+
     def patch(self, id):
         try:
             record = InvoiceService.query.filter_by(id=id).first()
@@ -182,24 +182,35 @@ class ClientsByUserID(Resource):
         clients = UserClients.query.filter_by(user_id=user_id).all()
         clients_dict = [[client.to_dict(), client.client.to_dict()] for client in clients]
         return clients_dict, 200
-    
-class PostClientUserRelation(Resource):    
-    def post(self, user_id, client_id):
+    def delete(self, user_id):
         try:
             data = request.json
             required_fields = ['user_id', 'client_id']
             for field in required_fields:
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
-                
-            new_relation = UserClients(
-                user_id = data['user_id'],
-                client_id = data['client_id']
+            user_client = UserClients.query.filter_by(user_id=user_id, client_id=data['client_id']).first()
+            if not user_client:
+                return {'error': 'Service not found for this user'}, 404
+            db.session.delete(user_client)
+            db.session.commit()
+            return {'message': 'Service successfully deleted'}, 200
+        except Exception as e:
+                db.session.rollback()
+                return {'error': f'An error occurred while processing the request: {e}'}, 500
+    def post(self, user_id):
+        try:
+            data = request.json
+            print("data", data)
+            new_user_client = UserClients(
+                client_id = data,
+                user_id = user_id
             )
-            db.session.add(new_relation)
+
+            db.session.add(new_user_client)
             db.session.commit()
 
-            return new_relation.to_dict(), 201
+            return new_user_client.to_dict(), 201
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error occurred while processing the request: {e}'}, 500
@@ -208,6 +219,18 @@ class ClientByID(Resource):
     def get(self, id):
         client = Client.query.filter_by(id=id).first()
         return client.to_dict(), 200
+    def patch(self, id):
+        try:
+            record = Client.query.filter_by(id=id).first()
+            for attr in request.json:
+                setattr(record, attr, request.json[attr])
+            db.session.add(record)
+            db.session.commit()
+            return record.to_dict(), 200
+        except Exception as e:
+            db.session.rollback()
+            return {'error': f'An error {e} occured'}, 500
+
 
 class InvoicesByClientID(Resource):
     def get(self, client_id):
@@ -215,7 +238,7 @@ class InvoicesByClientID(Resource):
         invoice_dict = [invoice.to_dict() for invoice in invoices]
         return invoice_dict, 200
 
-        
+
 
 class Schedule(Resource):
     def get(self, id):
@@ -239,11 +262,11 @@ class Schedule(Resource):
                             'client_service_list' : services_list,
                             'invoice_service_id': service['id']
                         })
-                
+
             return schedule, 200
         else:
             return jsonify({'error': 'User not found'}), 404
-        
+
 class ServicesByUser(Resource):
     def get(self, id):
         services = UserServices.query.filter_by(user_id=id).all()
@@ -251,7 +274,7 @@ class ServicesByUser(Resource):
         service_list = [Service.query.filter_by(id=service).first() for service in services_dict]
         service_list_dict = [service.to_dict() for service in service_list]
         return service_list_dict, 200
-    
+
     def post(self, id):
         try:
             data = request.json
@@ -259,12 +282,12 @@ class ServicesByUser(Resource):
             for field in required_fields:
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
-            
+
             new_service = UserServices(
                 service_id = data['service_id'],
                 user_id = id
             )
-            
+
             db.session.add(new_service)
             db.session.commit()
 
@@ -311,7 +334,6 @@ api.add_resource(Invoices, '/invoices')
 api.add_resource(InvoiceServices, '/invoice_services')
 api.add_resource(InvoiceServicesById, '/invoice_service/<int:id>')
 api.add_resource(ClientsByUserID, '/clients_by_user_id/<int:user_id>')
-api.add_resource(PostClientUserRelation, '/post_client_user_relation/<int:user_id>_<int:client_id>')
 api.add_resource(ClientByID, '/client_by_id/<int:id>')
 api.add_resource(InvoicesByClientID, '/invoices_by_client_id/<int:client_id>')
 api.add_resource(Login, '/login')
@@ -321,4 +343,3 @@ api.add_resource(ServicesByUser, '/services_by_user_id/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
-

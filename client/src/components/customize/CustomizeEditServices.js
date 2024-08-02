@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from "formik"
 import { useState } from "react"
 
-const CustomizeEditServices = ({ service, setUpdate, update, validationSchema }) => {
+const CustomizeEditServices = ({ service, setUpdate, update }) => {
     const [expand, setExpand] = useState(false)
 
     const handleSubmit = (values, service) => {
@@ -46,7 +46,6 @@ const CustomizeEditServices = ({ service, setUpdate, update, validationSchema })
                 <div className={`service_list_item_form ${expand ? "expand" : null}`}>
                     <Formik
                         initialValues={{ name: service.name }}
-                        validationSchema={validationSchema}
                         onSubmit={values => handleSubmit(values, service)}
                     >
                         {({ errors, touched }) => (
