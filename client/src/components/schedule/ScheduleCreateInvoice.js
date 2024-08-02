@@ -17,7 +17,7 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                 setInitialValue(client_by_user_data[0][0].client_id)
             })
             .catch(error => console.error('Error fetching schedule:', error));
-        fetch(`http://localhost:5555/services`)
+        fetch(`http://localhost:5555/services_by_user_id/${localStorage.getItem('userId')}`)
             .then(response => response.json())
             .then(data => {
                 setServiceList(data)

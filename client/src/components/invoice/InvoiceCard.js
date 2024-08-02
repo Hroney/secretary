@@ -6,8 +6,6 @@ function InvoiceCard({ invoice, index }) {
 
 
     if (invoice) {
-
-
         return (
             <div className={`invoice_card_container ${expand ? 'extended' : ''}`}>
                 <div className="invoice_card_number">

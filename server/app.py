@@ -251,6 +251,7 @@ class ServicesByUser(Resource):
         service_list = [Service.query.filter_by(id=service).first() for service in services_dict]
         service_list_dict = [service.to_dict() for service in service_list]
         return service_list_dict, 200
+    
     def post(self, id):
         try:
             data = request.json
@@ -282,6 +283,24 @@ class ServicesByUser(Resource):
         except Exception as e:
             db.session.rollback()
             return {'error': f'An error {e} occured'}, 500
+    def delete(self, id):
+        try:
+            data = request.json
+            required_fields = ['id']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field {field}'}, 400
+            user_service = UserServices.query.filter_by(user_id=id, service_id=data['id']).first()
+            print(user_service)
+            if not user_service:
+                return {'error': 'Service not found for this user'}, 404
+            db.session.delete(user_service)
+            db.session.commit()
+            return {'message': 'Service successfully deleted'}, 200
+        except Exception as e:
+                db.session.rollback()
+                return {'error': f'An error occurred while processing the request: {e}'}, 500
+
 
 
 api.add_resource(Index, '/')

@@ -21,8 +21,16 @@ function CustomizeAddServices({ id, handleRemove }) {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
-                handleRemove(id);
+                let service_id = { 'service_id': data.id }
+                fetch(`http://localhost:5555/services_by_user_id/${localStorage.getItem('userId')}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(service_id),
+                })
+                    .then(response => response.json())
+                    .then(data => handleRemove(id))
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -35,23 +43,24 @@ function CustomizeAddServices({ id, handleRemove }) {
 
     return (
         <div className="add_service_container">
+            <button type="button" onClick={handleCancel} className="service_container_button">Cancel</button>
             <Formik
                 initialValues={{ name: '' }}
                 validationSchema={validationSchema}
                 onSubmit={values => handleSubmit(values)}
             >
                 {({ errors, touched }) => (
-                    <Form>
-                        <label>name</label>
-                        <Field id='name' name='name' placeholder='name' />
-                        <button type="submit">Add</button>
+                    <>
+                        <Form>
+                            <Field id='name' name='name' placeholder='name' />
+                            <button type="submit" className="service_container_button">Add</button>
+                        </Form>
                         {errors.name && touched.name ? (
                             <div className="error">{errors.name}</div>
                         ) : null}
-                    </Form>
+                    </>
                 )}
             </Formik>
-            <button type="button" onClick={handleCancel}>cancel</button>
         </div>
     );
 }
