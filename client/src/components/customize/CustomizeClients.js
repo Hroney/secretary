@@ -104,10 +104,6 @@ function CustomizeClient() {
                                 setUpdate={setUpdate}
                                 update={update}
                             />
-                            {/* <div key={client[1].id} className="client_list_item">
-                                {client[1].name}
-                                {client[1].email}
-                            </div> */}
                         </>
                     ))}
                 </div>

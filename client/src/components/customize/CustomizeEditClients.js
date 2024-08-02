@@ -40,10 +40,10 @@ const CustomizeEditClients = ({ client, setUpdate, update }) => {
     <div key={client[0].client_id} className="service_list_item">
       <div className="client_list_item_name">
         <div className="client_list_name_email">
-          <div>
+          <div className="client_list_name">
             {client[1].name}
           </div>
-          <div>
+          <div className="client_list_email">
             {client[1].email}
           </div>
         </div>

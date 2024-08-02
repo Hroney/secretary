@@ -1,13 +1,13 @@
 .client_list_name_email {
   display: flex;
-  justify-content: space-between;
-  flex-grow: 1;
+  flex-grow: 2;
+  gap: 50px;
 }
 
 .client_list_item_name {
   display: flex;
   flex: 1;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .client_list_delete {
@@ -15,8 +15,7 @@
   display: flex;
   user-select: none;
   color: red;
-  flex-grow: 2;
-  justify-content: flex-end;
+  align-self: flex-end;
 }
 
 .client_expander {
@@ -35,4 +34,13 @@
 
 .client_container.expand {
   display: block;
+}
+
+.client_list_name,
+.client_list_email {
+  flex-grow: 1;
+}
+
+.client_list_name {
+  max-width: 20vw;
 }
