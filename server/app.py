@@ -278,15 +278,16 @@ class Schedule(Resource):
                 invoices = Invoice.query.filter_by(client_id=client.client_id).all()
                 for invoice in invoices:
                     invoice_dict = invoice.to_dict()
-                    services_list = invoice_dict['services']
-                    for service in services_list:
-                        schedule.append({
-                            'client': invoice_dict['client'],
-                            'service': service['name'],
-                            'scheduled_date': service['scheduled_date'] if service['scheduled_date'] else None,
-                            'client_service_list' : services_list,
-                            'invoice_service_id': service['id']
-                        })
+                    if id == invoice_dict['user_id']:
+                        services_list = invoice_dict['services']
+                        for service in services_list:
+                            schedule.append({
+                                'client': invoice_dict['client'],
+                                'service': service['name'],
+                                'scheduled_date': service['scheduled_date'] if service['scheduled_date'] else None,
+                                'client_service_list' : services_list,
+                                'invoice_service_id': service['id']
+                            })
 
             return schedule, 200
         else:
