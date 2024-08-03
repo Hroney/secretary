@@ -226,7 +226,6 @@ class ClientsByUserID(Resource):
     def post(self, user_id):
         try:
             data = request.json
-            print("data", data)
             new_user_client = UserClients(
                 client_id = data,
                 user_id = user_id
@@ -268,13 +267,10 @@ class InvoicesByClientID(Resource):
 class Schedule(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
-        print('user', user.id)
         if user:
             clients = UserClients.query.filter_by(user_id=user.id).all()
-            print('clients', clients)
             schedule = []
             for client in clients:
-                print('client', client.to_dict())
                 invoices = Invoice.query.filter_by(client_id=client.client_id).all()
                 for invoice in invoices:
                     invoice_dict = invoice.to_dict()
@@ -340,7 +336,6 @@ class ServicesByUser(Resource):
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
             user_service = UserServices.query.filter_by(user_id=id, service_id=data['id']).first()
-            print(user_service)
             if not user_service:
                 return {'error': 'Service not found for this user'}, 404
             db.session.delete(user_service)

@@ -20,7 +20,6 @@ function CustomizeServices() {
             fetch(`http://localhost:5555/services_by_user_id/${localStorage.getItem('userId')}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     setServices(data);
                 })
                 .catch(error => console.error('Error fetching services:', error));

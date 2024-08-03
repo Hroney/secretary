@@ -37,7 +37,6 @@ function ClientCard({ client }) {
                 if (response.ok) {
                     const data = await response.json();
                     let filteredList = data.filter((item) => item.user_id == localStorage.getItem('userId'))
-                    console.log('data, ', filteredList)
                     setInvoiceList(filteredList);
                 } else {
                     console.error('Error:', response.statusText);

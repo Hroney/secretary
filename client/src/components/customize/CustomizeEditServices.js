@@ -20,7 +20,6 @@ const CustomizeEditServices = ({ service, setUpdate, update }) => {
     }
 
     const handleDelete = () => {
-        console.log(service)
         fetch(`http://localhost:5555/services_by_user_id/${localStorage.getItem('userId')}`, {
             method: 'DELETE',
             headers: {

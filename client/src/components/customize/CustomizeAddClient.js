@@ -13,7 +13,6 @@ function CustomizeAddClient({ id, handleRemove }) {
     });
 
     const handleSubmit = (values) => {
-        console.log('values', values)
         fetch(`http://localhost:5555/clients`, {
             method: 'POST',
             headers: {

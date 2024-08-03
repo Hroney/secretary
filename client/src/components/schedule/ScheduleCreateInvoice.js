@@ -28,7 +28,6 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
 
 
     const handleSubmit = async (values) => {
-        console.log('client_id', values.client_id)
         try {
             let clientIdNum = Number(values.client_id)
             const invoiceResponse = await fetch(`http://localhost:5555/invoices`, {

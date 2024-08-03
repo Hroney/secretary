@@ -3,10 +3,8 @@ import { useState } from "react"
 
 const CustomizeEditClients = ({ client, setUpdate, update }) => {
   const [expand, setExpand] = useState(false)
-  console.log("client: ", client)
 
   const handleSubmit = (values, client) => {
-    console.log("values", values)
     fetch(`http://localhost:5555/client_by_id/${client[0].client_id}`, {
       method: 'PATCH',
       headers: {
