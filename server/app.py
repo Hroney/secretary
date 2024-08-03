@@ -38,6 +38,31 @@ class Users(Resource):
         users = User.query.all()
         user_dict = [user.to_dict() for user in users]
         return user_dict, 200
+    def post(self):
+        try:
+            data = request.get_json()
+            username = data.get('username')
+            password = data.get('password')
+
+            if not username or not password:
+                return {"message": "Username and password are required"}, 400
+
+            if User.query.filter_by(username=username).first():
+                return {"message": "User already exists"}, 400
+
+            new_user = User(username=username)
+            new_user.password_hash = password
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            return new_user.to_dict(), 201
+
+        except Exception as e:
+            return {"message": str(e)}, 500
+
+
+
 
 class Clients(Resource):
     def get(self):

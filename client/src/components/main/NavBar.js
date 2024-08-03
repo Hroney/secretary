@@ -4,7 +4,7 @@ import '../../styles/navbar.css'
 
 
 
-function NavBar({ isLoggedIn }) {
+function NavBar({ isLoggedIn, setIsLoggedIn }) {
 
     return (
         <nav className="nav-bar">
@@ -30,7 +30,7 @@ function NavBar({ isLoggedIn }) {
                         <NavLink to='/customize' className='nav-link'>Customize</NavLink>
                     </li>
                     <li>
-                        <NavLink to='/logout' className='nav-link'>Logout</NavLink>
+                        <NavLink to='/login' className='nav-link' onClick={() => setIsLoggedIn(false)}>Logout</NavLink>
                     </li>
                 </ul>
             )}

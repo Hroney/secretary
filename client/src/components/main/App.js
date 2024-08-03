@@ -6,19 +6,9 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem('user'));
-  //   console.log(user)
-  //   if (user) {
-  //     setIsLoggedIn(true)
-  //   } else {
-  //     navigate('/login')
-  //   }
-  // }, [navigate])
-
   return (
     <div>
-      <header><NavBar isLoggedIn={isLoggedIn} /></header>
+      <header><NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} /></header>
       <main className="content">
         <Outlet context={[isLoggedIn, setIsLoggedIn]} />
       </main>

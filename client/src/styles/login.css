@@ -1,0 +1,28 @@
+.login_container {
+  background: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login_form,
+.signup_form {
+  display: none;
+  align-content: center;
+}
+
+.login_form.expand,
+.signup_form.expand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  min-height: 90vh;
+}

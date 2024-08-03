@@ -22,7 +22,6 @@ TEMP_FILE_PATH = 'user_secrets.txt'
 def create_users():
     users = []
 
-    # Open the file for writing (this will overwrite any existing data)
     with open(TEMP_FILE_PATH, 'w') as temp_file:
         for _ in range(5):
             user = User(
@@ -30,14 +29,13 @@ def create_users():
             )
             password = fake.password()
             user.password_hash = password
-            
-            # Write the username and password to the file
+
             temp_file.write(f'User: {user.username}, Password: {password}\n')
-            
+
             users.append(user)
 
     print("User data written to user_secrets.txt")
-    
+
     return users
 
 def create_clients():
@@ -63,7 +61,7 @@ def create_user_services(services, users):
     userservices = []
     for user in users:
         for service in services:
-            if rc([True, False]):  # Randomly decide if this user gets this service
+            if rc([True, False]):
                 userservice = UserServices(
                     user_id=user.id,
                     service_id=service.id
@@ -75,7 +73,7 @@ def create_user_clients(users, clients):
     user_clients = []
     for user in users:
         num_clients = randint(5, 10)
-        client_set = set(rc(clients) for _ in range(num_clients)) 
+        client_set = set(rc(clients) for _ in range(num_clients))
         for client in client_set:
             user_client = UserClients(
                 user=user,
@@ -110,7 +108,7 @@ def create_invoices_services(invoices, clients, services, user_services, user_cl
             if client.id == invoice.client_id:
                 user_id = invoice.user_id
                 user_service_ids = [sid for uid, sid in user_service_dict if uid == user_id]
-                
+
                 scheduled_date = fake.date_time_between(start_date='-30d', end_date='+30d')
                 num_services = randint(2, 5)
 
