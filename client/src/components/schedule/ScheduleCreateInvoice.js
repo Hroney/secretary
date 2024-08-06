@@ -35,7 +35,7 @@ function ScheduleCreateInvoice({ value, setForceRender, forceRender }) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ client_id: clientIdNum }),
+                body: JSON.stringify({ client_id: clientIdNum, user_id: localStorage.getItem('userId') }),
             });
             const invoiceData = await invoiceResponse.json();
             const invoice_id = invoiceData.id;

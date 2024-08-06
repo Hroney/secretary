@@ -1,5 +1,5 @@
 .login_container {
-  background: red;
+  background: rgb(223, 236, 236);
   display: flex;
   flex-direction: column;
   justify-content: center;

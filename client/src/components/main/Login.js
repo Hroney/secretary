@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate, useOutletContext } from "react-router-dom"
+import { useNavigate, useOutletContext } from "react-router-dom";
 import redirectCheck from "../../helpers/redirectCheck";
 import loginRequest from '../../helpers/loginRequest';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import "../../styles/login.css"
+import "../../styles/login.css";
 
 const handleLogIn = async (values, setIsLoggedIn, navigate, setInvalid) => {
     const { username, password } = values;
@@ -17,7 +17,7 @@ const handleLogIn = async (values, setIsLoggedIn, navigate, setInvalid) => {
         setIsLoggedIn(true);
         navigate("/schedule");
     } else {
-        setInvalid(true)
+        setInvalid(true);
     }
 }
 
@@ -49,26 +49,32 @@ const handleSignUp = async (values, setIsLoggedIn, navigate, setInvalid) => {
     }
 };
 
+const loginValidationSchema = Yup.object().shape({
+    username: Yup.string()
+        .min(2, "Username must be at least 2 characters long")
+        .required("Username is required"),
+    password: Yup.string()
+        .min(8, "Password must be at least 8 characters long")
+        .required("Password is required"),
+});
 
+const signUpValidationSchema = Yup.object().shape({
+    username: Yup.string()
+        .min(2, "Username must be at least 2 characters long")
+        .required("Username is required"),
+    password: Yup.string()
+        .min(8, "Password must be at least 8 characters long")
+        .required("Password is required"),
+    confirmPassword: Yup.string()
+        .oneOf([Yup.ref('password'), null], "Passwords must match")
+        .required("Confirm Password is required"),
+});
 
 function Login() {
-    const [hidden, setHidden] = useState(false)
+    const [hidden, setHidden] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useOutletContext();
     const navigate = useNavigate();
     const [invalid, setInvalid] = useState(false);
-
-    const validationSchema = Yup.object().shape({
-        username: Yup.string()
-            .min(2, "Username must be at least 2 characters long")
-            .required("Username is required"),
-        password: Yup.string()
-            .min(8, "Password must be at least 8 characters long")
-            .required("Password is required"),
-        confirmPassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], "Passwords must match")
-            .required("Confirm Password is required"),
-    });
-
 
     return (
         <div className='login_box'>
@@ -79,7 +85,7 @@ function Login() {
                     <div className={`login_form ${hidden ? null : "expand"}`}>
                         <Formik
                             initialValues={{ username: '', password: '' }}
-                            validationSchema={validationSchema}
+                            validationSchema={loginValidationSchema}
                             onSubmit={(values) => handleLogIn(values, setIsLoggedIn, navigate, setInvalid)}
                         >
                             {({ isSubmitting }) => (
@@ -105,7 +111,7 @@ function Login() {
                     <div className={`signup_form ${hidden ? "expand" : null}`}>
                         <Formik
                             initialValues={{ username: '', password: '', confirmPassword: '' }}
-                            validationSchema={validationSchema}
+                            validationSchema={signUpValidationSchema}
                             onSubmit={(values) => handleSignUp(values, setIsLoggedIn, navigate, setInvalid)}
                         >
                             {({ isSubmitting }) => (
@@ -136,7 +142,7 @@ function Login() {
                 </div>
             )}
         </div>
-    )
+    );
 }
 
-export default Login
+export default Login;

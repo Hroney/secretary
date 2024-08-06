@@ -95,18 +95,16 @@ function CustomizeClient() {
                 {expand ? "Clients (Collapse)" : "Clients (Click to expand)"}
             </div>
             <div className={`client_container ${expand ? "expand" : null}`}>
-                <div className="client_list">
-                    {clients.map(client => (
-                        <>
-                            <CustomizeEditClients
-                                key={client[0].id}
-                                client={client}
-                                setUpdate={setUpdate}
-                                update={update}
-                            />
-                        </>
-                    ))}
-                </div>
+                {clients.map(client => (
+                    <div className="client_list" key={client[0].id}>
+                        <CustomizeEditClients
+                            key={client[0].id}
+                            client={client}
+                            setUpdate={setUpdate}
+                            update={update}
+                        />
+                    </div>
+                ))}
                 {newClients.map(service => (
                     <CustomizeAddClient
                         key={service.id}

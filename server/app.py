@@ -124,13 +124,14 @@ class Invoices(Resource):
     def post(self):
         try:
             data = request.json
-            required_fields = ['client_id']
+            required_fields = ['client_id', 'user_id']
             for field in required_fields:
                 if field not in data:
                     return {'error': f'Missing required field {field}'}, 400
 
             new_invoice = Invoice(
-                client_id = data['client_id']
+                client_id = data['client_id'],
+                user_id = data['user_id']
             )
             db.session.add(new_invoice)
             db.session.commit()
